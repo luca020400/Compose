@@ -6,10 +6,13 @@ import androidx.compose.Composable
 import androidx.compose.getValue
 import androidx.compose.setValue
 import androidx.compose.state
+import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
 import androidx.ui.foundation.Icon
+import androidx.ui.foundation.ProvideTextStyle
 import androidx.ui.foundation.Text
+import androidx.ui.foundation.clickable
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.vector.VectorAsset
@@ -17,14 +20,16 @@ import androidx.ui.input.ImeAction
 import androidx.ui.input.KeyboardType
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
-import androidx.ui.layout.ColumnScope.weight
+import androidx.ui.layout.RowScope.weight
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
+import androidx.ui.material.icons.filled.ArrowDropDown
 import androidx.ui.material.icons.filled.Clear
 import androidx.ui.material.icons.filled.Info
 import androidx.ui.material.icons.outlined.Email
 import androidx.ui.material.icons.outlined.Person
 import androidx.ui.material.icons.outlined.Phone
+import androidx.ui.material.icons.rounded.Email
 import androidx.ui.savedinstancestate.savedInstanceState
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontStyle
@@ -44,33 +49,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+/* TODO: Fetch them */
+val accounts = listOf(
+    Account(
+        name = "Luca Stefani",
+        email = "luca.stefani.ge1@gmail.com"
+    ),
+    Account(
+        name = "luca020400",
+        email = "luca020400@lineageos.org"
+    )
+)
+
 @Composable
 fun Content() {
     MainHolder {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            IconTextFieldHint(
-                hint = "First name",
-                asset = Icons.Outlined.Person,
-                imeAction = ImeAction.Next
+        Column {
+            AccountRow(
+                accounts = accounts
             )
-            IconTextFieldHint(
-                hint = "Last name",
-                imeAction = ImeAction.Next
-            )
-            IconTextFieldHint(
-                hint = "Phone",
-                asset = Icons.Outlined.Phone,
-                keyboardType = KeyboardType.Number,
-                imeAction = ImeAction.Next
-            )
-            IconTextFieldHint(
-                hint = "Email",
-                asset = Icons.Outlined.Email,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Done
-            )
+            TextFieldColumn()
         }
     }
 }
@@ -102,7 +100,9 @@ fun MainHolder(
                 cutoutShape = CircleShape
             ) {
                 InfoDialogButton()
-                Spacer(Modifier.weight(1f, true))
+                Spacer(
+                    modifier = Modifier.weight(1f, true)
+                )
                 IconButton(
                     onClick = {
                         /* TODO: Clear all text fields */
@@ -127,6 +127,125 @@ fun MainHolder(
         isFloatingActionButtonDocked = true
     ) {
         content()
+    }
+}
+
+@Composable
+fun AccountRow(accounts: List<Account>) {
+    Row(
+        verticalGravity = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Save to",
+            style = TextStyle(
+                fontStyle = FontStyle.Normal,
+                fontWeight = FontWeight.Bold
+            ),
+            modifier = Modifier.padding(16.dp)
+        )
+
+        Card(
+            shape = CircleShape,
+            modifier = Modifier.padding(10.dp)
+        ) {
+            var expanded by state { false }
+            var currentAccount by state { accounts[0] }
+
+            DropdownMenu(
+                toggle = {
+                    Row(
+                        verticalGravity = Alignment.CenterVertically,
+                        modifier = Modifier.clickable(
+                            onClick = {
+                                expanded = true
+                            })
+                    ) {
+                        Icon(
+                            asset = Icons.Rounded.Email,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                        Column(
+                            modifier = Modifier.padding(10.dp)
+                        ) {
+                            val text = @Composable {
+                                Text(
+                                    text = currentAccount.name
+                                )
+                            }
+                            val secondaryText = @Composable {
+                                Text(
+                                    text = currentAccount.email
+                                )
+                            }
+                            ProvideEmphasis(EmphasisAmbient.current.high) {
+                                ProvideTextStyle(MaterialTheme.typography.subtitle1, text)
+                            }
+                            ProvideEmphasis(EmphasisAmbient.current.medium) {
+                                ProvideTextStyle(MaterialTheme.typography.body2, secondaryText)
+                            }
+                        }
+                        Spacer(
+                            modifier = Modifier.weight(1f, true)
+                        )
+                        Icon(
+                            asset = Icons.Default.ArrowDropDown,
+                            modifier = Modifier.padding(10.dp)
+                        )
+                    }
+                },
+                expanded = expanded,
+                onDismissRequest = {
+                    expanded = false
+                }
+            ) {
+                for (account in accounts) {
+                    ListItem(
+                        text = {
+                            Text(account.name)
+                        },
+                        secondaryText = {
+                            Text(account.email)
+                        },
+                        icon = {
+                            Icon(asset = Icons.Rounded.Email)
+                        },
+                        onClick = {
+                            currentAccount = account
+                            expanded = false
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TextFieldColumn() {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        IconTextFieldHint(
+            hint = "First name",
+            asset = Icons.Outlined.Person,
+            imeAction = ImeAction.Next
+        )
+        IconTextFieldHint(
+            hint = "Last name",
+            imeAction = ImeAction.Next
+        )
+        IconTextFieldHint(
+            hint = "Phone",
+            asset = Icons.Outlined.Phone,
+            keyboardType = KeyboardType.Number,
+            imeAction = ImeAction.Next
+        )
+        IconTextFieldHint(
+            hint = "Email",
+            asset = Icons.Outlined.Email,
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Done
+        )
     }
 }
 
