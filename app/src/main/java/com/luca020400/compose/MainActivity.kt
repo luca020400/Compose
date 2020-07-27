@@ -3,6 +3,8 @@ package com.luca020400.compose
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
+import androidx.compose.getValue
+import androidx.compose.setValue
 import androidx.compose.state
 import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
@@ -24,7 +26,6 @@ import androidx.ui.material.icons.outlined.Email
 import androidx.ui.material.icons.outlined.Person
 import androidx.ui.material.icons.outlined.Phone
 import androidx.ui.savedinstancestate.savedInstanceState
-import androidx.ui.text.SoftwareKeyboardController
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
@@ -131,20 +132,20 @@ fun MainHolder(
 
 @Composable
 fun InfoDialogButton() {
-    val showDialog = state { false }
+    var showDialog by state { false }
 
     IconButton(
         onClick = {
-            showDialog.value = true
+            showDialog = true
         }
     ) {
         Icon(Icons.Filled.Info)
     }
 
-    if (showDialog.value) {
+    if (showDialog) {
         AlertDialog(
             onCloseRequest = {
-                showDialog.value = false
+                showDialog = false
             },
             title = {
                 Text(text = "Information")
@@ -155,7 +156,7 @@ fun InfoDialogButton() {
             confirmButton = {
                 Button(
                     onClick = {
-                        showDialog.value = false
+                        showDialog = false
                     }
                 ) {
                     Text(text = "OK")
@@ -202,20 +203,21 @@ fun TextFieldHint(
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Unspecified
 ) {
-    val state = savedInstanceState(saver = TextFieldValue.Saver) { TextFieldValue() }
+    var state by savedInstanceState(saver = TextFieldValue.Saver) {
+        TextFieldValue()
+    }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = state.value,
+        value = state,
         onValueChange = {
-            state.value = it
+            state = it
         },
         label = {
             Text(hint)
         },
         keyboardType = keyboardType,
         imeAction = imeAction,
-        onImeActionPerformed = { action: ImeAction,
-                                 softwareKeyboardController: SoftwareKeyboardController? ->
+        onImeActionPerformed = { action, softwareKeyboardController ->
             if (action == ImeAction.Done) {
                 softwareKeyboardController?.hideSoftwareKeyboard()
             }
