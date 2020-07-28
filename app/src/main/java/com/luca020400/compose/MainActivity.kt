@@ -18,7 +18,6 @@ import androidx.ui.graphics.Color
 import androidx.ui.graphics.vector.VectorAsset
 import androidx.ui.input.ImeAction
 import androidx.ui.input.KeyboardType
-import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
 import androidx.ui.layout.RowScope.weight
 import androidx.ui.material.*
@@ -250,11 +249,11 @@ fun TextFieldColumn(
         modifier = Modifier.padding(16.dp)
     ) {
         IconTextFieldHint(
-            value = TextFieldValue(contact.firstName),
+            value = contact.firstName,
             onValueChange = {
                 onContactChange(
                     contact.copy(
-                        firstName = it.text
+                        firstName = it
                     )
                 )
             },
@@ -263,11 +262,11 @@ fun TextFieldColumn(
             imeAction = ImeAction.Next
         )
         IconTextFieldHint(
-            value = TextFieldValue(contact.lastSane),
+            value = contact.lastName,
             onValueChange = {
                 onContactChange(
                     contact.copy(
-                        lastSane = it.text
+                        lastName = it
                     )
                 )
             },
@@ -275,11 +274,11 @@ fun TextFieldColumn(
             imeAction = ImeAction.Next
         )
         IconTextFieldHint(
-            value = TextFieldValue(contact.number),
+            value = contact.number,
             onValueChange = {
                 onContactChange(
                     contact.copy(
-                        number = it.text
+                        number = it
                     )
                 )
             },
@@ -289,11 +288,11 @@ fun TextFieldColumn(
             imeAction = ImeAction.Next
         )
         IconTextFieldHint(
-            value = TextFieldValue(contact.email),
+            value = contact.email,
             onValueChange = {
                 onContactChange(
                     contact.copy(
-                        email = it.text
+                        email = it
                     )
                 )
             },
@@ -343,8 +342,8 @@ fun InfoDialogButton() {
 
 @Composable
 fun IconTextFieldHint(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     hint: String,
     asset: VectorAsset? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
@@ -376,8 +375,8 @@ fun IconTextFieldHint(
 
 @Composable
 fun TextFieldHint(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     hint: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Unspecified
