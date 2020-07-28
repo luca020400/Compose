@@ -9,10 +9,7 @@ import androidx.compose.state
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
-import androidx.ui.foundation.Icon
-import androidx.ui.foundation.ProvideTextStyle
-import androidx.ui.foundation.Text
-import androidx.ui.foundation.clickable
+import androidx.ui.foundation.*
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.graphics.Color
 import androidx.ui.graphics.vector.VectorAsset
@@ -137,11 +134,13 @@ fun MainHolder(
         floatingActionButtonPosition = Scaffold.FabPosition.Center,
         isFloatingActionButtonDocked = true
     ) {
-        content(contact, {
-            contact = it
-        }, account, {
-            account = it
-        })
+        ScrollableColumn(contentPadding = it) {
+            content(contact, {
+                contact = it
+            }, account, {
+                account = it
+            })
+        }
     }
 }
 
