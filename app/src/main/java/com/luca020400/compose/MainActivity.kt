@@ -30,7 +30,6 @@ import androidx.ui.material.icons.outlined.Email
 import androidx.ui.material.icons.outlined.Person
 import androidx.ui.material.icons.outlined.Phone
 import androidx.ui.material.icons.rounded.Email
-import androidx.ui.savedinstancestate.savedInstanceState
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
@@ -63,20 +62,32 @@ val accounts = listOf(
 
 @Composable
 fun Content() {
-    MainHolder {
+    MainHolder { contact, onContactChange, currentAccount, onAccountChange ->
         Column {
             AccountRow(
-                accounts = accounts
+                accounts = accounts,
+                currentAccount = currentAccount,
+                onAccountChange = onAccountChange,
             )
-            TextFieldColumn()
+            TextFieldColumn(
+                contact = contact,
+                onContactChange = onContactChange,
+            )
         }
     }
 }
 
 @Composable
 fun MainHolder(
-    content: @Composable () -> Unit
+    content: @Composable (
+        Contact,
+        (Contact) -> Unit,
+        Account,
+        (Account) -> Unit
+    ) -> Unit
 ) {
+    var contact by state { Contact() }
+    var account by state { accounts[0] }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -105,7 +116,7 @@ fun MainHolder(
                 )
                 IconButton(
                     onClick = {
-                        /* TODO: Clear all text fields */
+                        contact = Contact()
                     }
                 ) {
                     Icon(Icons.Filled.Clear)
@@ -119,19 +130,27 @@ fun MainHolder(
                 },
                 contentColor = Color.White,
                 onClick = {
-                    /* TODO: Gather all text fields data */
+                    /* TODO: Save contact data */
                 }
             )
         },
         floatingActionButtonPosition = Scaffold.FabPosition.Center,
         isFloatingActionButtonDocked = true
     ) {
-        content()
+        content(contact, {
+            contact = it
+        }, account, {
+            account = it
+        })
     }
 }
 
 @Composable
-fun AccountRow(accounts: List<Account>) {
+fun AccountRow(
+    currentAccount: Account,
+    onAccountChange: (Account) -> Unit,
+    accounts: List<Account>
+) {
     Row(
         verticalGravity = Alignment.CenterVertically
     ) {
@@ -139,7 +158,7 @@ fun AccountRow(accounts: List<Account>) {
             text = "Save to",
             style = TextStyle(
                 fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
             ),
             modifier = Modifier.padding(16.dp)
         )
@@ -149,7 +168,6 @@ fun AccountRow(accounts: List<Account>) {
             modifier = Modifier.padding(10.dp)
         ) {
             var expanded by state { false }
-            var currentAccount by state { accounts[0] }
 
             DropdownMenu(
                 toggle = {
@@ -158,7 +176,8 @@ fun AccountRow(accounts: List<Account>) {
                         modifier = Modifier.clickable(
                             onClick = {
                                 expanded = true
-                            })
+                            }
+                        )
                     ) {
                         Icon(
                             asset = Icons.Rounded.Email,
@@ -185,18 +204,18 @@ fun AccountRow(accounts: List<Account>) {
                             }
                         }
                         Spacer(
-                            modifier = Modifier.weight(1f, true)
+                            modifier = Modifier.weight(1f, true),
                         )
                         Icon(
                             asset = Icons.Default.ArrowDropDown,
-                            modifier = Modifier.padding(10.dp)
+                            modifier = Modifier.padding(10.dp),
                         )
                     }
                 },
                 expanded = expanded,
                 onDismissRequest = {
                     expanded = false
-                }
+                },
             ) {
                 for (account in accounts) {
                     ListItem(
@@ -210,7 +229,7 @@ fun AccountRow(accounts: List<Account>) {
                             Icon(asset = Icons.Rounded.Email)
                         },
                         onClick = {
-                            currentAccount = account
+                            onAccountChange(account)
                             expanded = false
                         }
                     )
@@ -221,30 +240,65 @@ fun AccountRow(accounts: List<Account>) {
 }
 
 @Composable
-fun TextFieldColumn() {
+fun TextFieldColumn(
+    contact: Contact,
+    onContactChange: (Contact) -> Unit,
+) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
         IconTextFieldHint(
+            value = TextFieldValue(contact.firstName),
+            onValueChange = {
+                onContactChange(
+                    contact.copy(
+                        firstName = it.text
+                    )
+                )
+            },
             hint = "First name",
             asset = Icons.Outlined.Person,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         IconTextFieldHint(
+            value = TextFieldValue(contact.lastSane),
+            onValueChange = {
+                onContactChange(
+                    contact.copy(
+                        lastSane = it.text
+                    )
+                )
+            },
             hint = "Last name",
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         IconTextFieldHint(
+            value = TextFieldValue(contact.number),
+            onValueChange = {
+                onContactChange(
+                    contact.copy(
+                        number = it.text
+                    )
+                )
+            },
             hint = "Phone",
             asset = Icons.Outlined.Phone,
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
         )
         IconTextFieldHint(
+            value = TextFieldValue(contact.email),
+            onValueChange = {
+                onContactChange(
+                    contact.copy(
+                        email = it.text
+                    )
+                )
+            },
             hint = "Email",
             asset = Icons.Outlined.Email,
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
         )
     }
 }
@@ -287,10 +341,12 @@ fun InfoDialogButton() {
 
 @Composable
 fun IconTextFieldHint(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     hint: String,
     asset: VectorAsset? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Unspecified
+    imeAction: ImeAction = ImeAction.Unspecified,
 ) {
     Row {
         val padding = Modifier.padding(
@@ -312,24 +368,23 @@ fun IconTextFieldHint(
                 )
             )
         }
-        TextFieldHint(hint, keyboardType, imeAction)
+        TextFieldHint(value, onValueChange, hint, keyboardType, imeAction)
     }
 }
 
 @Composable
 fun TextFieldHint(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
     hint: String,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Unspecified
 ) {
-    var state by savedInstanceState(saver = TextFieldValue.Saver) {
-        TextFieldValue()
-    }
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
-        value = state,
+        value = value,
         onValueChange = {
-            state = it
+            onValueChange(it)
         },
         label = {
             Text(hint)
