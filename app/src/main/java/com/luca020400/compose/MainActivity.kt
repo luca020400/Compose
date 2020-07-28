@@ -208,14 +208,14 @@ fun AccountRow(
                         )
                         Icon(
                             asset = Icons.Default.ArrowDropDown,
-                            modifier = Modifier.padding(10.dp),
+                            modifier = Modifier.padding(10.dp)
                         )
                     }
                 },
                 expanded = expanded,
                 onDismissRequest = {
                     expanded = false
-                },
+                }
             ) {
                 for (account in accounts) {
                     ListItem(
@@ -242,7 +242,7 @@ fun AccountRow(
 @Composable
 fun TextFieldColumn(
     contact: Contact,
-    onContactChange: (Contact) -> Unit,
+    onContactChange: (Contact) -> Unit
 ) {
     Column(
         modifier = Modifier.padding(16.dp)
@@ -258,7 +258,7 @@ fun TextFieldColumn(
             },
             hint = "First name",
             asset = Icons.Outlined.Person,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         )
         IconTextFieldHint(
             value = TextFieldValue(contact.lastSane),
@@ -270,7 +270,7 @@ fun TextFieldColumn(
                 )
             },
             hint = "Last name",
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         )
         IconTextFieldHint(
             value = TextFieldValue(contact.number),
@@ -284,7 +284,7 @@ fun TextFieldColumn(
             hint = "Phone",
             asset = Icons.Outlined.Phone,
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next,
+            imeAction = ImeAction.Next
         )
         IconTextFieldHint(
             value = TextFieldValue(contact.email),
@@ -298,7 +298,7 @@ fun TextFieldColumn(
             hint = "Email",
             asset = Icons.Outlined.Email,
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Done,
+            imeAction = ImeAction.Done
         )
     }
 }
@@ -346,7 +346,7 @@ fun IconTextFieldHint(
     hint: String,
     asset: VectorAsset? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Unspecified,
+    imeAction: ImeAction = ImeAction.Unspecified
 ) {
     Row {
         val padding = Modifier.padding(
