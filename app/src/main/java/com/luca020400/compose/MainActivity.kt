@@ -133,8 +133,8 @@ fun MainHolder(
         },
         floatingActionButtonPosition = Scaffold.FabPosition.Center,
         isFloatingActionButtonDocked = true
-    ) {
-        ScrollableColumn(contentPadding = it) {
+    ) { innerPadding ->
+        ScrollableColumn(contentPadding = innerPadding) {
             content(contact, {
                 contact = it
             }, account, {
