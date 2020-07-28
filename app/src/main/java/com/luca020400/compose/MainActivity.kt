@@ -30,6 +30,7 @@ import androidx.ui.material.icons.outlined.Email
 import androidx.ui.material.icons.outlined.Person
 import androidx.ui.material.icons.outlined.Phone
 import androidx.ui.material.icons.rounded.Email
+import androidx.ui.material.ripple.RippleIndication
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
@@ -176,7 +177,8 @@ fun AccountRow(
                         modifier = Modifier.clickable(
                             onClick = {
                                 expanded = true
-                            }
+                            },
+                            indication = RippleIndication()
                         )
                     ) {
                         Icon(
