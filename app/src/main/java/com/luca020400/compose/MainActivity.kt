@@ -75,7 +75,7 @@ fun Content() {
 
 @Composable
 fun MainHolder(
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
     Scaffold(
         topBar = {
