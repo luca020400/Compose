@@ -396,8 +396,10 @@ fun TextFieldHint(
             if (action == ImeAction.Done) {
                 softwareKeyboardController?.hideSoftwareKeyboard()
             }
-            /* TODO: Make the Next ImeAction work */
-        }
+            /* TODO: Make the Next ImeAction work
+            *        See ComposeVariousInputField.kt when API stabilizes
+            * */
+        },
     )
 }
 
