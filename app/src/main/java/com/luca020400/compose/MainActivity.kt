@@ -67,11 +67,11 @@ fun Content() {
             AccountRow(
                 accounts = accounts,
                 currentAccount = currentAccount,
-                onAccountChange = onAccountChange,
+                onAccountChange = onAccountChange
             )
             TextFieldColumn(
                 contact = contact,
-                onContactChange = onContactChange,
+                onContactChange = onContactChange
             )
         }
     }
@@ -158,7 +158,7 @@ fun AccountRow(
             text = "Save to",
             style = TextStyle(
                 fontStyle = FontStyle.Normal,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Bold
             ),
             modifier = Modifier.padding(16.dp)
         )
@@ -204,7 +204,7 @@ fun AccountRow(
                             }
                         }
                         Spacer(
-                            modifier = Modifier.weight(1f, true),
+                            modifier = Modifier.weight(1f, true)
                         )
                         Icon(
                             asset = Icons.Default.ArrowDropDown,
