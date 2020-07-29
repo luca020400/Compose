@@ -2,10 +2,7 @@ package com.luca020400.compose
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.Composable
-import androidx.compose.getValue
-import androidx.compose.setValue
-import androidx.compose.state
+import androidx.compose.*
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.core.setContent
@@ -27,6 +24,7 @@ import androidx.ui.material.icons.outlined.Person
 import androidx.ui.material.icons.outlined.Phone
 import androidx.ui.material.icons.rounded.Email
 import androidx.ui.material.ripple.RippleIndication
+import androidx.ui.savedinstancestate.savedInstanceState
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontStyle
 import androidx.ui.text.font.FontWeight
@@ -83,8 +81,8 @@ fun MainHolder(
         (Account) -> Unit
     ) -> Unit
 ) {
-    var contact by state { Contact() }
-    var account by state { accounts[0] }
+    var contact by savedInstanceState { Contact() }
+    var account by savedInstanceState { accounts[0] }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -166,7 +164,7 @@ fun AccountRow(
             shape = CircleShape,
             modifier = Modifier.padding(10.dp)
         ) {
-            var expanded by state { false }
+            var expanded by remember { mutableStateOf(false) }
 
             DropdownMenu(
                 toggle = {
@@ -305,7 +303,7 @@ fun TextFieldColumn(
 
 @Composable
 fun InfoDialogButton() {
-    var showDialog by state { false }
+    var showDialog by remember { mutableStateOf(false) }
 
     IconButton(
         onClick = {
