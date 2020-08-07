@@ -30,8 +30,8 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = "1.4.0-dev-withExperimentalGoogleExtensions-20200720"
-        kotlinCompilerExtensionVersion = "0.1.0-dev15"
+        kotlinCompilerVersion = "1.4.0-rc"
+        kotlinCompilerExtensionVersion = "0.1.0-dev16"
     }
 
     buildTypes {
@@ -54,10 +54,10 @@ tasks.withType<KotlinCompile>().configureEach {
 dependencies {
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
-    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.appcompat:appcompat:1.2.0")
 
-    implementation("androidx.compose.foundation:foundation-layout:0.1.0-dev15")
-    implementation("androidx.compose.material:material:0.1.0-dev15")
-    implementation("androidx.compose.ui:ui:0.1.0-dev15")
-    implementation("androidx.ui:ui-tooling:0.1.0-dev15")
+    implementation("androidx.compose.foundation:foundation-layout:0.1.0-dev16")
+    implementation("androidx.compose.material:material:0.1.0-dev16")
+    implementation("androidx.compose.ui:ui:0.1.0-dev16")
+    implementation("androidx.ui:ui-tooling:0.1.0-dev16")
 }
