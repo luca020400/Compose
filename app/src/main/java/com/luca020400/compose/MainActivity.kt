@@ -10,11 +10,11 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material.ripple.RippleIndication
 import androidx.compose.runtime.*
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
@@ -178,7 +178,7 @@ fun AccountRow(
                         )
                     ) {
                         Icon(
-                            asset = Icons.Rounded.Email,
+                            asset = Icons.Filled.Email,
                             modifier = Modifier.padding(10.dp)
                         )
                         Column(
@@ -224,7 +224,7 @@ fun AccountRow(
                             Text(account.email)
                         },
                         icon = {
-                            Icon(asset = Icons.Rounded.Email)
+                            Icon(asset = Icons.Filled.Email)
                         },
                         onClick = {
                             onAccountChange(account)
