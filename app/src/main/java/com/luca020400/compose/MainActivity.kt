@@ -129,7 +129,7 @@ fun MainHolder(
                 }
             )
         },
-        floatingActionButtonPosition = Scaffold.FabPosition.Center,
+        floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true
     ) { innerPadding ->
         ScrollableColumn(contentPadding = innerPadding) {
@@ -226,10 +226,11 @@ fun AccountRow(
                         icon = {
                             Icon(asset = Icons.Filled.Email)
                         },
-                        onClick = {
-                            onAccountChange(account)
-                            expanded = false
-                        }
+                        modifier = Modifier.clickable(
+                            onClick = {
+                                onAccountChange(account)
+                                expanded = false
+                            }),
                     )
                 }
             }
@@ -315,7 +316,7 @@ fun InfoDialogButton() {
 
     if (showDialog) {
         AlertDialog(
-            onCloseRequest = {
+            onDismissRequest = {
                 showDialog = false
             },
             title = {

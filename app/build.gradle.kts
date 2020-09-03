@@ -30,8 +30,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerVersion = "1.4.0-rc"
-        kotlinCompilerExtensionVersion = "0.1.0-dev16"
+        kotlinCompilerExtensionVersion = "1.0.0-alpha02"
     }
 
     buildTypes {
@@ -47,7 +46,7 @@ android {
 tasks.withType<KotlinCompile>().configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xallow-jvm-ir-dependencies", "-Xskip-prerelease-check")
+        useIR = true
     }
 }
 
@@ -56,8 +55,8 @@ dependencies {
     implementation(kotlin("stdlib", KotlinCompilerVersion.VERSION))
     implementation("androidx.appcompat:appcompat:1.2.0")
 
-    implementation("androidx.compose.foundation:foundation-layout:0.1.0-dev16")
-    implementation("androidx.compose.material:material:0.1.0-dev16")
-    implementation("androidx.compose.ui:ui:0.1.0-dev16")
-    implementation("androidx.ui:ui-tooling:0.1.0-dev16")
+    implementation("androidx.compose.foundation:foundation-layout:1.0.0-alpha02")
+    implementation("androidx.compose.material:material:1.0.0-alpha02")
+    implementation("androidx.compose.ui:ui:1.0.0-alpha02")
+    implementation("androidx.ui:ui-tooling:1.0.0-alpha02")
 }
