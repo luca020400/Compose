@@ -20,6 +20,9 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.savedinstancestate.savedInstanceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.ExperimentalFocus
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.VectorAsset
 import androidx.compose.ui.platform.setContent
@@ -238,6 +241,7 @@ fun AccountRow(
     }
 }
 
+@OptIn(ExperimentalFocus::class)
 @Composable
 fun TextFieldColumn(
     contact: Contact,
@@ -246,6 +250,7 @@ fun TextFieldColumn(
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
+        val focusRequesters = List(3) { FocusRequester() }
         IconTextFieldHint(
             value = contact.firstName,
             onValueChange = {
@@ -257,7 +262,8 @@ fun TextFieldColumn(
             },
             hint = "First name",
             asset = Icons.Outlined.Person,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            nextFocusRequester = focusRequesters[0]
         )
         IconTextFieldHint(
             value = contact.lastName,
@@ -269,7 +275,9 @@ fun TextFieldColumn(
                 )
             },
             hint = "Last name",
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            focusRequester = focusRequesters[0],
+            nextFocusRequester = focusRequesters[1]
         )
         IconTextFieldHint(
             value = contact.number,
@@ -283,7 +291,9 @@ fun TextFieldColumn(
             hint = "Phone",
             asset = Icons.Outlined.Phone,
             keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            focusRequester = focusRequesters[1],
+            nextFocusRequester = focusRequesters[2]
         )
         IconTextFieldHint(
             value = contact.email,
@@ -297,7 +307,8 @@ fun TextFieldColumn(
             hint = "Email",
             asset = Icons.Outlined.Email,
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
+            focusRequester = focusRequesters[2]
         )
     }
 }
@@ -338,6 +349,7 @@ fun InfoDialogButton() {
     }
 }
 
+@OptIn(ExperimentalFocus::class)
 @Composable
 fun IconTextFieldHint(
     value: String,
@@ -345,7 +357,9 @@ fun IconTextFieldHint(
     hint: String,
     asset: VectorAsset? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Unspecified
+    imeAction: ImeAction = ImeAction.Unspecified,
+    focusRequester: FocusRequester = FocusRequester(),
+    nextFocusRequester: FocusRequester = FocusRequester()
 ) {
     Row {
         val padding = Modifier.padding(
@@ -367,20 +381,33 @@ fun IconTextFieldHint(
                 )
             )
         }
-        TextFieldHint(value, onValueChange, hint, keyboardType, imeAction)
+        TextFieldHint(
+            value,
+            onValueChange,
+            hint,
+            keyboardType,
+            imeAction,
+            focusRequester,
+            nextFocusRequester
+        )
     }
 }
 
+@OptIn(ExperimentalFocus::class)
 @Composable
 fun TextFieldHint(
     value: String,
     onValueChange: (String) -> Unit,
     hint: String,
     keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Unspecified
+    imeAction: ImeAction = ImeAction.Unspecified,
+    focusRequester: FocusRequester = FocusRequester(),
+    nextFocusRequester: FocusRequester = FocusRequester()
 ) {
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .focusRequester(focusRequester)
+            .fillMaxWidth(),
         value = value,
         onValueChange = {
             onValueChange(it)
@@ -393,10 +420,9 @@ fun TextFieldHint(
         onImeActionPerformed = { action, softwareKeyboardController ->
             if (action == ImeAction.Done) {
                 softwareKeyboardController?.hideSoftwareKeyboard()
+            } else if (action == ImeAction.Next) {
+                nextFocusRequester.requestFocus()
             }
-            /* TODO: Make the Next ImeAction work
-            *        See ComposeVariousInputField.kt when API stabilizes
-            * */
         },
     )
 }
